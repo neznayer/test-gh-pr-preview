@@ -31,9 +31,8 @@ jobs:
           pnpm install
           pnpm run build
 
-      - name: Deploy preview
-        uses: rossjrw/pr-preview-action@v1
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          source-dir: ./out/
-          folder: out
           branch: gh-pages
+          folder: out # The folder the action should deploy.
