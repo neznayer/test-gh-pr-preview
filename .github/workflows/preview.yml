@@ -1,6 +1,9 @@
 name: Deploy PR previews
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     types:
       - opened
@@ -12,43 +15,6 @@ concurrency: preview-${{ github.ref }}
 
 permissions:
   contents: write
-
-jobs:
-  deploy-preview:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: "16"
-          cache: "pnpm"
-      - name: Build
-        run: |
-          pnpm install
-          pnpm run build
-
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN_KEY }}
-          branch: gh-pages
-          folder: out # The folder the action should deploy.
-
-
-name: github pages
-
-on:
-  push:
-    branches:
-      - main # deploy main. If your branch is `master`, you'll have to replace that throughout this file.
-  pull_request: # This will publish a site preview on every pull request, and also run the build command to test if the site is broken.
 
 jobs:
   deploy:
@@ -73,7 +39,7 @@ jobs:
 
       - name: Checkout website repo
         uses: actions/checkout@v3
-       
+
       - name: Set production base URL
         run: echo "BASE_URL=https://${{ env.DOMAIN }}/${{ github.event.repository.name }}/" >> $GITHUB_ENV
 
